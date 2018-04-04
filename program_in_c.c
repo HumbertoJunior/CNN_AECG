@@ -13,12 +13,12 @@
 #define thirdFilterLength 3
 #define fourthFilterLength 1
 #define flattenLenght numberOfFilters*(sampleLength/poolLength)
-#define firstFullyLenght 124
+#define firstFullyLenght 128
 #define secondFullyLenght 64
 
 #define NEW_MAX(x,y) ((x) >= (y)) ? (x) : (y)
 #define RELU(x)(x>0?x:0)
-#define SIGMOID(x) (2.0f / (1 + exp(-x)))
+#define SIGMOID(x) (1.00f / (1 + exp(-x)))
 
 //Global Variables ============
 //ALL DEFINED IN THE .H FILE
@@ -221,13 +221,15 @@ void flatten()
 
 void fully1()
 {
+	int offset = 0;
 	// j - number of neurons in this layer
 	for(int j=0; j<firstFullyLenght; j++)
 	{
 		// i - number of neurons in the last layer
 		for (int i=0; i<flattenLenght; ++i)
 		{
-			firstFullyOutput[j] += (flattenOutput[i]*firstFullyParameters[j][i]);
+			offset = j * firstFullyLenght + i;
+			firstFullyOutput[j] += (flattenOutput[i]*a[offset]);
 		}
 		firstFullyOutput[j] += firstFullyBias[j];
 		firstFullyOutput[j] = RELU(firstFullyOutput[j]);
@@ -238,13 +240,15 @@ void fully1()
 
 void fully2()
 {
+	int offset = 0;
 	// j - number of neurons in this layer
 	for(int j=0; j<secondFullyLenght; j++)
 	{
 		// i - number of neurons in the last layer
 		for (int i=0; i<firstFullyLenght; ++i)
 		{
-			secondFullyOutput[j] += (firstFullyOutput[i]*secondFullyParameters[j][i]);
+			offset = j * firstFullyLenght + i;
+			secondFullyOutput[j] += (firstFullyOutput[i]*secondFullyParameters[offset]);
 		}
 		secondFullyOutput[j] += secondFullyBias[j];
 		secondFullyOutput[j] = RELU(secondFullyOutput[j]);
@@ -290,13 +294,14 @@ int main()
 
 	flatten();
 
+	//firstFullyParameters = a;
+
 	fully1();
 
 	fully2();
 
 	outputLayer();
 
-	firstFullyParameters[firstFullyLenght][flattenLenght] = (float*) malloc(sizeof(float)*123008);
 
 	return 0;
 }
