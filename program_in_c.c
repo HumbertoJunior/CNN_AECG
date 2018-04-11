@@ -18,7 +18,8 @@
 
 #define NEW_MAX(x,y) ((x) >= (y)) ? (x) : (y)
 #define RELU(x)(x>0?x:0)
-#define SIGMOID(x) (1.00f / (1 + exp(-x)))
+#define SIGMOID(x) (1.f / (1 + exp(-x)))
+
 
 //Global Variables ============
 //ALL DEFINED IN THE .H FILE
@@ -41,6 +42,7 @@
 // float firstFullyBias[firstFullyLenght] = {0};
 // float secondFullyBias[secondFullyLenght] = {0};
 // float outputBias = 0;
+float firstConvOutputR[numberOfFilters][sampleLength] = {0};
 
 float firstConvOutput[numberOfFilters][sampleLength] =  {0};
 float maxpoolingOutput[numberOfFilters][sampleLength/poolLength] =  {0};
@@ -68,6 +70,7 @@ void adjust_input(float samples[])
 
 void conv1()
 {
+	// j - number 
 	for(int j=0; j<numberOfFilters; j++)
 	{
 		for(int i=0; i<sampleLength; i++)
@@ -78,11 +81,12 @@ void conv1()
 			}	
 			firstConvOutput[j][i] += firstConvBias[j];
 			firstConvOutput[j][i] = RELU(firstConvOutput[j][i]);
-			// printf("%d\t", firstLayerOutput[j][i]);
+			printf("%f\t", firstConvOutput[j][i]);
 		}
 		// printf("\n");
 	}
-	// printf("\n");
+	printf("\n");
+	// printf("1conv: %f\n",firstConvOutput[1][21]);
 }
 
 
@@ -93,11 +97,13 @@ void maxpooling()
 		for(int i=0; i<sampleLength; i=i+poolLength)
 		{
 			maxpoolingOutput[j][i/poolLength] = NEW_MAX(firstConvOutput[j][i],firstConvOutput[j][i+1]);
-			// printf("%d\t", secondLayerOutput[j][i/2]);
+			printf("%f\t", maxpoolingOutput[j][i/2]);
 		}
 		// printf("\n");
 	}
-	// printf("\n");
+	printf("\n");
+	// printf("max: %f\n",maxpoolingOutput[1][10]);
+
 }
 
 void adjustSecondConvInput(float samples[numberOfFilters][sampleLength/poolLength])
@@ -114,7 +120,7 @@ void adjustSecondConvInput(float samples[numberOfFilters][sampleLength/poolLengt
 
 void conv2()
 {
-	// l - is the number of samples
+	// l - the number of samples
 	for(int l=0; l<32; l++)
 	{
 		//i - size of the samples
@@ -126,16 +132,17 @@ void conv2()
 				//k - size of the filters
 				for(int k=0; k<secondFilterLength; k++)
 				{
-					secondConvOutput[l][i] += (secondConvInput[l][i+k]*secondConvFilter[l][j][k]);
+					secondConvOutput[l][i] += (secondConvInput[j][i+k]*secondConvFilter[l][j][k]);
 				}	
-				// printf("%d\t", secondLayerOutput[j][i]);
 			}
 			secondConvOutput[l][i] += secondConvBias[l];
 			secondConvOutput[l][i] = RELU(secondConvOutput[l][i]);
-			// printf("\n");
+			printf("%f\t", secondConvOutput[l][i]);
 		}
 		// printf("\n");
 	}
+	printf("\n");
+
 }
 
 void adjustThirdConvInput(float samples[numberOfFilters][sampleLength/poolLength])
@@ -174,6 +181,8 @@ void conv3()
 		}
 		// printf("\n");
 	}
+	printf("3conv: %f\n",thirdConvOutput[1][10]);
+
 }
 
 
@@ -201,6 +210,8 @@ void conv4()
 		}
 		// printf("\n");
 	}
+	printf("4conv: %f\n",fourthConvOutput[1][1]);
+
 }
 
 
@@ -216,7 +227,8 @@ void flatten()
 			count++;
 		}	
 	}
-	// printf("\n");
+	printf("flatten: %f\n",flattenOutput[1]);
+
 }
 
 void fully1()
@@ -252,9 +264,9 @@ void fully2()
 		}
 		secondFullyOutput[j] += secondFullyBias[j];
 		secondFullyOutput[j] = RELU(secondFullyOutput[j]);
-		// printf("%d\n", fully1Output[j]);
+		printf("%f\t", secondFullyOutput[j]);
 	}
-	// printf("\n");
+	printf("\n");
 }
 
 void outputLayer()
@@ -294,17 +306,21 @@ int main()
 
 	flatten();
 
-	//firstFullyParameters = a;
-
 	fully1();
 
 	fully2();
 
 	outputLayer();
 
-
 	return 0;
 }
 
+
+
+
+
+
+// ponteiro = fopen ("/Users/HumbertoJunior/Desktop/TCC2_CNN/CNN_AECG/dadosCNN_C.txt", "w");
+	// Para escrever você irá utilizar o "w", para ler "r", para alterar "a"
 
 
