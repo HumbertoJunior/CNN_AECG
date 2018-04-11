@@ -171,18 +171,17 @@ void conv3()
 				//k - size of the filters
 				for(int k=0; k<secondFilterLength; k++)
 				{
-					thirdConvOutput[l][i] += (thirdConvInput[l][i+k]*thirdConvFilter[l][j][k]);
+					thirdConvOutput[l][i] += (thirdConvInput[j][i+k]*thirdConvFilter[l][j][k]);
 				}	
 				// printf("%d\t", secondLayerOutput[j][i]);
 			}
 			thirdConvOutput[l][i] += thirdConvBias[l];
 			thirdConvOutput[l][i] = RELU(thirdConvOutput[l][i]);
-			// printf("\n");
+			printf("%f\t", thirdConvOutput[l][i]);		
 		}
 		// printf("\n");
 	}
-	printf("3conv: %f\n",thirdConvOutput[1][10]);
-
+	printf("\n");
 }
 
 
@@ -200,17 +199,17 @@ void conv4()
 				//k - size of the filters
 				for(int k=0; k<secondFilterLength; k++)
 				{
-					fourthConvOutput[l][i] += (thirdConvOutput[l][i+k]*fourthConvFilter[l][j][k]);
+					fourthConvOutput[l][i] += (thirdConvOutput[j][i+k]*fourthConvFilter[l][j][k]);
 				}	
 				// printf("%d\t", secondLayerOutput[j][i]);
 			}
 			fourthConvOutput[l][i] += fourthConvBias[l];
 			fourthConvOutput[l][i] = RELU(fourthConvOutput[l][i]);
-			// printf("\n");
+			printf("%f\t", fourthConvOutput[l][i]);		
 		}
 		// printf("\n");
 	}
-	printf("4conv: %f\n",fourthConvOutput[1][1]);
+	printf("\n");
 
 }
 
