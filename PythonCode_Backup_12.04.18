@@ -1,0 +1,7 @@
+import numpy as np
+import matplotlib.pyplot as plt2
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers.convolutional import Conv1D
+from keras.layers.convolutional import MaxPooling1D
+from keras.layers import Flatten

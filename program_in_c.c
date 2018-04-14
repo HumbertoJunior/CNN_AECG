@@ -42,7 +42,6 @@
 // float firstFullyBias[firstFullyLenght] = {0};
 // float secondFullyBias[secondFullyLenght] = {0};
 // float outputBias = 0;
-float firstConvOutputR[numberOfFilters][sampleLength] = {0};
 
 float firstConvOutput[numberOfFilters][sampleLength] =  {0};
 float maxpoolingOutput[numberOfFilters][sampleLength/poolLength] =  {0};
@@ -65,7 +64,9 @@ void adjust_input(float samples[])
 	for (int i=0; i<sampleLength; i++)
 	{
 		sampleAdjusted[i+(firstFilterLength/2)] = samples[i];
+		printf("%.32f, ",sampleAdjusted[i+(firstFilterLength/2)] );
 	}
+	printf("\n");
 }
 
 void conv1()
@@ -81,7 +82,7 @@ void conv1()
 			}	
 			firstConvOutput[j][i] += firstConvBias[j];
 			firstConvOutput[j][i] = RELU(firstConvOutput[j][i]);
-			printf("%f\t", firstConvOutput[j][i]);
+			printf("%.32f, ", firstConvOutput[j][i]);
 		}
 		// printf("\n");
 	}
@@ -278,7 +279,7 @@ void outputLayer()
 	
 	output += outputBias;
 	output = SIGMOID(output);
-	printf("%f\n", output);
+	printf("output: %f\n", output);
 }
 
 
